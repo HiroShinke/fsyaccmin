@@ -1,0 +1,29 @@
+%{
+
+open AST
+
+%}
+
+// The start token becomes a parser function in the compiled code:
+%start Expr
+
+// Regular tokens
+%token <int> INT
+%token PLUS MINUS TIMES DIVIDE LPAREN RPAREN
+%token EOF
+
+// Precedence
+%left PLUS MINUS
+%left TIMES DIVIDE
+
+%type < Expression > Expr
+
+%%
+
+Expr : INT                { Int $1 }
+     | Expr PLUS Expr     { Plus ($1,$3) }
+     | Expr MINUS Expr     { Minus ($1,$3) }
+     | Expr TIMES Expr     { Times ($1,$3) }
+     | Expr DIVIDE Expr     { Divide ($1,$3) }
+     | LPAREN Expr RPAREN { $2 }
+
